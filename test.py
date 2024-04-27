@@ -13,4 +13,7 @@ primes = [next(i) for k in range(8)]
 print(primes)
 primes = [t[0] for t in zip(i, range(8))]
 print(list(primes))
+for k in range(100000):
+    next(i)
 
+print(next(i))
