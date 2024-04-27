@@ -13,6 +13,32 @@ static PyObject *MyIterator_new(PyTypeObject *type, PyObject *args, PyObject *kw
         return NULL;
     }
 
+    self->current = 1;
+
+    return (PyObject *)self;
+}
+
+static int is_prime(int n)
+{
+    for(int i = 2; i*i <= n ; i++){
+        if(n % i == 0){
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+static PyObject *MyIterator_iternext(struct MyIterator *self){
+    self->current += 1;
+    while(!is_prime(self->current)){
+        self->current += 1;
+    }
+    return PyLong_FromLong(self->current);
+}
+
+static PyObject *MyIterator_iter(struct MyIterator *self){
+    Py_INCREF(self);
     return (PyObject *)self;
 }
 
@@ -23,6 +49,8 @@ static PyTypeObject MyIterator_type = {
     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
     .tp_itemsize = 0,
     .tp_new = MyIterator_new,
+    .tp_iternext = (iternextfunc) MyIterator_iternext,
+    .tp_iter = (getiterfunc) MyIterator_iter,
 };
 
 static PyModuleDef iterator_module_def = {
